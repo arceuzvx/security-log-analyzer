@@ -16,4 +16,5 @@ A Python-based security log analyzer that detects various types of attacks and s
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/security-log-analyzer.git```
+   git clone https://github.com/yourusername/security-log-analyzer.git
+   
