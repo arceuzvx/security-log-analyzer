@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -40,6 +41,9 @@
                     <label for="file-upload" class="cursor-pointer bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Browse Files</label>
                 </div>
             </div>
+
+            <!-- Section to display analysis results -->
+            <div id="results" class="mt-8"></div>
         </main>
 
         <!-- Footer -->
@@ -51,6 +55,7 @@
     </div>
 
     <script>
+        // JavaScript code for drag-and-drop and file upload
         const fileUpload = document.getElementById('file-upload');
         const dropArea = fileUpload.closest('.border-dashed');
 
@@ -66,12 +71,60 @@
         dropArea.addEventListener('drop', (e) => {
             e.preventDefault();
             dropArea.classList.remove('border-blue-600');
-            fileUpload.files = e.dataTransfer.files;
+            const files = e.dataTransfer.files;
+            handleFileUpload(files);
         });
 
         dropArea.addEventListener('click', () => {
             fileUpload.click();
         });
+
+        function handleFileUpload(files) {
+            const formData = new FormData();
+
+            for (let i = 0; i < files.length; i++) {
+                formData.append('file', files[i]);
+            }
+
+            fetch('/upload', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Analysis Results:', data);
+                displayResults(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('File upload failed. Please try again.');
+            });
+        }
+
+        function displayResults(reports) {
+            const resultsContainer = document.getElementById('results');
+            resultsContainer.innerHTML = ''; // Clear old results
+
+            reports.forEach((report, index) => {
+                const reportDiv = document.createElement('div');
+                reportDiv.className = 'bg-white p-4 rounded-lg shadow mb-4';
+
+                reportDiv.innerHTML = `
+                    <h3 class="text-lg font-semibold mb-2">Report ${index + 1}</h3>
+                    <p><strong>Analysis Time:</strong> ${report.analysis_time}</p>
+                    <p><strong>Total Events:</strong> ${report.total_security_events}</p>
+                    <p><strong>Unique IPs:</strong> ${report.unique_ips_detected}</p>
+                    <p><strong>Suspicious IPs:</strong> ${report.suspicious_ips.join(', ') || 'None'}</p>
+                    <h4 class="mt-2 font-semibold">Event Summary:</h4>
+                    <ul class="list-disc ml-4">
+                        ${Object.entries(report.event_summary).map(
+                            ([event, count]) => `<li>${event}: ${count}</li>`
+                        ).join('')}
+                    </ul>
+                `;
+                resultsContainer.appendChild(reportDiv);
+            });
+        }
     </script>
 </body>
 </html>
