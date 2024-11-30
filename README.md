@@ -6,11 +6,8 @@ A Python-based security log analyzer that detects various types of attacks and s
 
 - Failed login and brute force attack detection
 - DoS/DDoS attack detection
-- SQL injection attempt detection
-- XSS attack detection
-- Directory traversal attack detection
-- Suspicious user agent detection
-- Comprehensive reporting system
+
+
 
 ## Installation
 
