@@ -1,6 +1,6 @@
 # Security Log Analyzer
 
-A Python-based security log analyzer that detects various types of attacks and suspicious activities in server logs.
+in pregress...
 
 ## Features
 
